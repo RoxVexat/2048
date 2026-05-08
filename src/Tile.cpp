@@ -1,10 +1,12 @@
 #include <Tile.hpp>
 #include <Game.hpp>
+#include <iostream>
 
 Tile::Tile(Game &game, int i, int j)
     : i(i), j(j),
       shape({static_cast<float>(size), static_cast<float>(size)}){
         game.setTile(*this, i, j);
+        game.appendToRenderList(this);
       }
 
 float Tile::getX() const
@@ -16,9 +18,11 @@ float Tile::getY() const
     return (i + 1) * 40 + i * size;
 }
 
-void Tile::draw(sf::RenderWindow &window)
-{
-    shape.setPosition({getX(), getY()});
+void Tile::draw(sf::RenderWindow& window)
+{   
+    float x = getX();
+    float y = getY();
+    shape.setPosition({x, y});
     shape.setFillColor(sf::Color::Green);
     window.draw(shape);
 }
@@ -38,14 +42,6 @@ void Tile::setGridPos(int i, int j)
     this->i = i;
     this->j = j;
 }
-
-// void Tile::move(Game &game, Direction direction)
-// {
-//     switch (direction) {
-//         case Game::Direction::Up:
-            
-//     }
-// }
 
 void Tile::moveRight(Game &game) {
     std::vector<std::optional<Tile>> &grid = game.getGrid();

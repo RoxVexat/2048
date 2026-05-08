@@ -5,6 +5,18 @@
 #include <Game.hpp>
 #include <iostream>
 
+
+void printGrid(Game &game) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (game.hasTile(i, j)) std::cout << "1 ";
+            else std::cout << "0 ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "\n";
+}
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({800, 800}), "My window");
@@ -26,24 +38,27 @@ int main()
                 {
                     case sf::Keyboard::Scancode::W:
                         tile1.moveUp(game);
+                        
                         break;
                     case sf::Keyboard::Scancode::S:
                         tile1.moveDown(game);
+                       
                         break;
                     case sf::Keyboard::Scancode::A:
                         tile1.moveLeft(game);
+                        
                         break;
                     case sf::Keyboard::Scancode::D:
                         tile1.moveRight(game);
                         break;
                 }
-                std::cout << tile1.getI() << ", " << tile1.getJ()  << "\n";
+                game.printTileCoords();
+                // printGrid(game);
+                // std::cout << tile1.getI() << ", " << tile1.getJ();
             }
         }
-
         window.clear(sf::Color::Black);
-        tile1.draw(window);
-        tile2.draw(window);
+        game.draw(window);
         window.display();
     }
 }

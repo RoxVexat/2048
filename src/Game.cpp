@@ -1,5 +1,6 @@
 #include <Game.hpp>
 #include <random>
+#include <iostream>
 
 Game::Game()
         : rows_(4), cols_(4), grid(rows_ * cols_)
@@ -25,18 +26,16 @@ Game::Game()
 
 void Game::draw(sf::RenderWindow &window)
     {
-        for (int i = 0; i < rows_; i++)
-        {
-            for (int j = 0; j < cols_; j++)
-            {
-                auto &tile = grid[i * cols_ + j];
-                if (tile.has_value())
-                {
-                    tile->draw(window);
-                }
-            }
+        for (auto tile : tiles) {
+            tile->draw(window);
         }
     }
+
+void Game::printTileCoords() {
+    for (auto tile : tiles) {
+        std::cout << "Drawing tile at (" << tile->getI() << ", " << tile->getJ() << ")..." << "\n";
+    }
+}
 
 int Game::getRows() const {return rows_;}
 int Game::getCols() const {return cols_;}
@@ -48,10 +47,17 @@ bool Game::isValidCell(int i, int j) const {
            (j >= 0 && j < getCols());
 
 }
+
+std::optional<Tile>& Game::getCell(int i, int j) {
+    return getGrid()[i * getCols() + j];
+}
 bool Game::hasTile(int i, int j) const {
     return isValidCell(i, j) && getGrid()[i * getCols() + j].has_value();
 }
 
+void Game::appendToRenderList(Tile* tile) {
+    tiles.push_back(tile);
+}
 void Game::setTile(const Tile& tile, int i, int j) {
     grid[i * getCols() + j] = tile;
 }

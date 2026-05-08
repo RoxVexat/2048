@@ -11,6 +11,7 @@ class Game
         int cols_;
         int rows_;
         std::vector<std::optional<Tile>> grid;
+        std::vector<Tile*> tiles;
     public:
         Game();
         
@@ -20,8 +21,10 @@ class Game
         int getRows() const;
         
         bool hasTile(int i, int j) const;
+        std::optional<Tile>& getCell(int i, int j);
         void setTile(const Tile& tile, int i, int j);
-
+        void appendToRenderList(Tile* tile);
+        void printTileCoords();
         bool isValidCell(int i, int j) const;
         void resetCell(int i, int j);
         
