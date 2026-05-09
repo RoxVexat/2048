@@ -26,6 +26,10 @@ target_link_libraries(test
     sfml-graphics-s
     sfml-window-s
     sfml-system-s
+    
+    freetype
+    harfbuzz
     opengl32
     winmm
+    gdi32
 )

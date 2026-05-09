@@ -1,30 +1,14 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-
 #include <Tile.hpp>
 #include <Game.hpp>
-#include <iostream>
 
-
-void printGrid(Game &game) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (game.hasTile(i, j)) std::cout << "1 ";
-            else std::cout << "0 ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "\n";
-}
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({800, 800}), "My window");
     
     Game game;
-    Tile tile1(game, 0, 0);
-    Tile tile2(game, 0, 3);
-
 
     while (window.isOpen())
     {
@@ -37,24 +21,22 @@ int main()
                 switch (keyPressed->scancode)
                 {
                     case sf::Keyboard::Scancode::W:
-                        tile1.moveUp(game);
-                        
+                        game.moveUp();
+                        game.generateRandomTile();
                         break;
                     case sf::Keyboard::Scancode::S:
-                        tile1.moveDown(game);
-                       
+                        game.moveDown();
+                        game.generateRandomTile();
                         break;
                     case sf::Keyboard::Scancode::A:
-                        tile1.moveLeft(game);
-                        
+                        game.moveLeft();
+                        game.generateRandomTile();
                         break;
                     case sf::Keyboard::Scancode::D:
-                        tile1.moveRight(game);
+                        game.moveRight();
+                        game.generateRandomTile();
                         break;
                 }
-                game.printTileCoords();
-                // printGrid(game);
-                // std::cout << tile1.getI() << ", " << tile1.getJ();
             }
         }
         window.clear(sf::Color::Black);
