@@ -1,6 +1,7 @@
 #include "Tile.hpp"
 
 #include <iostream>
+#include <cmath> 
 
 #include <SFML/Graphics.hpp>
 
@@ -166,7 +167,7 @@ void Tile::draw(sf::RenderWindow& window)
     sf::Text text(game.font);
     
     text.setString(std::to_string(val));
-    text.setCharacterSize(100);
+    text.setCharacterSize(100 - static_cast<int>(std::log10(val)) * 12);
     text.setFillColor(sf::Color::Black);
 
     const sf::FloatRect textBounds = text.getLocalBounds();
@@ -179,7 +180,15 @@ void Tile::draw(sf::RenderWindow& window)
     float x = getX();
     float y = getY();
     shape->setPosition({x, y});
-    shape->setFillColor(colorMap[val]);
+
+    sf::Color tileColor;
+    auto it = colorMap.find(val);
+    if (it != colorMap.end()) 
+        tileColor = it->second;
+    else 
+        tileColor = sf::Color::White;
+
+    shape->setFillColor(tileColor);
 
    
     const sf::FloatRect shapeBounds = shape->getGlobalBounds();

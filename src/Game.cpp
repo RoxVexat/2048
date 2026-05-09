@@ -213,7 +213,7 @@ void Game::cleanUp() {
 }
 
 void Game::reset() {
-    
+
     cleanUp();
     numTiles = 0;
 
