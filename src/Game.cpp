@@ -11,12 +11,15 @@
 sf::Font Game::font("arial.ttf");
 
 Game::Game()
-    : rows_(4), cols_(4), grid_(rows_ * cols_)
+    : rows_(4), cols_(4), grid_(rows_ * cols_), numTiles(0)
 {
     generateRandomTile();
     generateRandomTile();
 }
 
+Game::~Game() {
+    cleanUp();
+}
 void Game::draw(sf::RenderWindow &window)
 {
     for (auto tile : renderList_)
@@ -36,6 +39,72 @@ Tile *Game::getCell(int i, int j) const
 
 std::vector<Tile *> &Game::getGrid() { return grid_; }
 std::vector<Tile *> &Game::getRenderList() { return renderList_; }
+
+
+bool Game::gameOver() const {
+    return !(
+        isMoveLeftAvailable() ||
+        isMoveRightAvailable() ||
+        isMoveUpAvailable() ||
+        isMoveDownAvailable()
+    );
+}
+
+bool Game::isMoveLeftAvailable() const {
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 1; j < cols_; j++) {
+            auto curTile = getCell(i, j);
+            if (curTile) {
+                auto leftTile = getCell(i, j-1);
+                if (!leftTile || curTile->getVal() == leftTile->getVal())
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Game::isMoveRightAvailable() const {
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_ - 1; j++) {
+            auto curTile = getCell(i, j);
+            if (curTile) {
+                auto rightTile = getCell(i, j+1);
+                if (!rightTile || curTile->getVal() == rightTile->getVal())
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Game::isMoveUpAvailable() const {
+    for (int i = 1; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            auto curTile = getCell(i, j);
+            if (curTile) {
+                auto topTile = getCell(i-1, j);
+                if (!topTile || curTile->getVal() == topTile->getVal())
+                    return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Game::isMoveDownAvailable() const {
+    for (int i = 0; i < rows_ - 1; i++) {
+        for (int j = 0; j < cols_; j++) {
+            auto curTile = getCell(i, j);
+            if (curTile) {
+                auto bottomTile = getCell(i+1, j);
+                if (!bottomTile || curTile->getVal() == bottomTile->getVal())
+                    return true;
+            }
+        }
+    }
+    return false;
+}
 
 void Game::addTileToRenderList(Tile *tile)
 {
@@ -58,6 +127,10 @@ void Game::resetGridCell(int i, int j)
 }
 
 void Game::generateRandomTile() {
+    
+    if (gameOver() && numTiles > 2)
+        return;
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> rowDist(0, rows_ - 1);
@@ -126,4 +199,24 @@ void Game::moveDown()
                 tile->moveDown();
         }
     }
+}
+
+void Game::cleanUp() {
+    for (auto tile : renderList_)
+        delete tile;
+
+    renderList_.clear();
+
+    for (auto& ptr : grid_) {
+        ptr = nullptr;
+    }
+}
+
+void Game::reset() {
+    
+    cleanUp();
+    numTiles = 0;
+
+    generateRandomTile();
+    generateRandomTile();
 }

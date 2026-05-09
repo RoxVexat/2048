@@ -1,8 +1,10 @@
 #pragma once
 
 #include <vector>
+#include <unordered_map>
 
 class Tile;
+
 namespace sf {
     class Font;
     class RenderWindow;
@@ -13,7 +15,12 @@ class Game
     public:
         static sf::Font font;
 
+        int numTiles;
+
         Game();
+        ~Game();
+        
+        void reset();
         
         int getCols() const;
         int getRows() const;
@@ -24,11 +31,12 @@ class Game
         std::vector<Tile*>& getGrid();
         std::vector<Tile*>& getRenderList();
 
-        void isMoveLeftAvailable();
-        void isMoveRightAvailable();
-        void isMoveUpAvailable();
-        void isMoveDownAvailable();
-        
+        bool gameOver() const;
+        bool isMoveLeftAvailable() const;
+        bool isMoveRightAvailable() const;
+        bool isMoveUpAvailable() const;
+        bool isMoveDownAvailable() const;
+
         void addTileToRenderList(Tile* tile);
         void removeTileFromRenderList(Tile * tile);
         void placeTileOnGrid(Tile* tile, int i, int j);
@@ -43,6 +51,7 @@ class Game
         void draw(sf::RenderWindow& window);
 
     private:
+        void cleanUp();
         int cols_;
         int rows_;
         std::vector<Tile*> grid_;
