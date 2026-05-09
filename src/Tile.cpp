@@ -7,6 +7,7 @@
 
 #include "Game.hpp"
 
+
 std::unordered_map<int, sf::Color> Tile::colorMap = {
     {2, sf::Color(0x00, 0xff, 0x91)},
     {4, sf::Color(0x2f, 0xff, 0x00)},
@@ -26,8 +27,11 @@ std::unordered_map<int, sf::Color> Tile::colorMap = {
 Tile::Tile(Game &game, int i, int j, int val)
     : i(i),
       j(j),
+      newI(i),
+      newJ(j),
       val(val),
       game(game),
+      merged(false),
       shape(new sf::RectangleShape(sf::Vector2f(size, size)))
     {   
         game.placeTileOnGrid(this, i, j);
@@ -47,11 +51,26 @@ float Tile::getY() const
 {
     return (i + 1) * 40 + i * size;
 }
+float Tile::getNewX() const
+{
+    return (newJ + 1) * 40 + newJ * size;
+}
+float Tile::getNewY() const
+{
+    return (newI + 1) * 40 + newI * size;
+}
+bool Tile::isMerged() const { return merged; }
+
+void Tile::markAsMerged() { merged = true; }
 
 int Tile::getI() const{ return i; }
 int Tile::getJ() const { return j; }
+int Tile::getNewI() const { return newI; }
+int Tile::getNewJ() const { return newJ; }
 int Tile::getVal() const { return val; }
 
+void Tile::setI(int newVal) { i = newVal; }
+void Tile::setJ(int newVal) { j = newVal; }
 
 void Tile::moveRight() {
     auto &grid = game.getGrid();
@@ -59,7 +78,7 @@ void Tile::moveRight() {
     const int curI = getI();
     int curJ = getJ();
     int nextJ = curJ + 1;
-    for (; nextJ < cols; curJ++, nextJ++, j++) {
+    for (; nextJ < cols; curJ++, nextJ++, newJ++) {
         if (!game.getCell(curI, nextJ)) {
             game.placeTileOnGrid(this, curI, nextJ);
             game.resetGridCell(curI, curJ);
@@ -72,10 +91,11 @@ void Tile::moveRight() {
         if (tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, curI, nextJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
-            game.removeTileFromRenderList(tile1);
-            delete tile1;
-            game.removeTileFromRenderList(tile2);
-            delete tile2;
+
+            newJ++;
+            tile1->markAsMerged();
+            tile2->markAsMerged();
+            
         }
     }
 };
@@ -86,7 +106,7 @@ void Tile::moveLeft() {
     const int curI = getI();
     int curJ = getJ();
     int nextJ = curJ - 1;
-    for (; nextJ >= 0; curJ--, nextJ--, j--) {
+    for (; nextJ >= 0; curJ--, nextJ--, newJ--) {
         if (!game.getCell(curI, nextJ)) {
             game.placeTileOnGrid(this, curI, nextJ);
             game.resetGridCell(curI, curJ);
@@ -99,10 +119,10 @@ void Tile::moveLeft() {
         if (tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, curI, nextJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
-            game.removeTileFromRenderList(tile1);
-            delete tile1;
-            game.removeTileFromRenderList(tile2);
-            delete tile2;
+
+            newJ--;
+            tile1->markAsMerged();
+            tile2->markAsMerged();
         }
     }
 };
@@ -113,7 +133,7 @@ void Tile::moveUp() {
     const int curJ = getJ();
     int curI = getI();
     int nextI = curI - 1;
-    for (; nextI >= 0; curI--, nextI--, i--) {
+    for (; nextI >= 0; curI--, nextI--, newI--) {
         if (!game.getCell(nextI, curJ)) {
             game.placeTileOnGrid(this, nextI, curJ);
             game.resetGridCell(curI, curJ);
@@ -126,10 +146,10 @@ void Tile::moveUp() {
         if (tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, nextI, curJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
-            game.removeTileFromRenderList(tile1);
-            delete tile1;
-            game.removeTileFromRenderList(tile2);
-            delete tile2;
+
+            newI--;
+            tile1->markAsMerged();
+            tile2->markAsMerged();
         }
     }
 };
@@ -140,7 +160,7 @@ void Tile::moveDown(){
     const int curJ = getJ();
     int curI = getI();
     int nextI = curI + 1;
-    for (; nextI < rows; curI++, nextI++, i++) {
+    for (; nextI < rows; curI++, nextI++, newI++) {
         if (!game.getCell(nextI, curJ)) {
             game.placeTileOnGrid(this, nextI, curJ);
             game.resetGridCell(curI, curJ);
@@ -153,10 +173,10 @@ void Tile::moveDown(){
         if (tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, nextI, curJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
-            game.removeTileFromRenderList(tile1);
-            delete tile1;
-            game.removeTileFromRenderList(tile2);
-            delete tile2;
+
+            newI++;
+            tile1->markAsMerged();
+            tile2->markAsMerged();
         }
     }
 }
@@ -177,8 +197,8 @@ void Tile::draw(sf::RenderWindow& window)
         textBounds.position.y + textBounds.size.y / 2.0f
     });
 
-    float x = getX();
-    float y = getY();
+    float x = getX() + (getNewX() - getX()) * game.animTimePassed / ANIM_TIME;
+    float y = getY() + (getNewY() - getY()) * game.animTimePassed / ANIM_TIME;
     shape->setPosition({x, y});
 
     sf::Color tileColor;

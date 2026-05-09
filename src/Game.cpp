@@ -8,10 +8,14 @@
 
 #include "Tile.hpp"
 
+const float ANIM_TIME = 0.10;
+
+
 sf::Font Game::font("arial.ttf");
 
 Game::Game()
-    : rows_(4), cols_(4), grid_(rows_ * cols_), numTiles(0)
+    : rows_(4), cols_(4), grid_(rows_ * cols_),
+      numTiles(0), animTimePassed(ANIM_TIME), areTilesMoving(false)
 {
     generateRandomTile();
     generateRandomTile();
@@ -149,6 +153,17 @@ void Game::generateRandomTile() {
     Tile* newTile = new Tile(*this, randI, randJ, 2 << shift);
 }
 
+void Game::cleanMerged() {
+    for (auto &tile : renderList_) {
+        if (tile && tile->isMerged()) {
+            delete tile;
+            tile = nullptr;
+        }
+    }
+
+    renderList_.erase(std::remove(renderList_.begin(), renderList_.end(), nullptr), renderList_.end());
+}
+
 void Game::moveLeft()
 {
     for (int i = 0; i < rows_; i++)
@@ -220,3 +235,27 @@ void Game::reset() {
     generateRandomTile();
     generateRandomTile();
 }
+
+void Game::update(float deltaTime) {
+    if (areTilesMoving) {
+        animTimePassed = std::min(ANIM_TIME, animTimePassed + deltaTime);
+        if (animTimePassed == ANIM_TIME) {
+            
+        }
+    }
+}
+void Game::startMoveAnim() {
+    areTilesMoving = true;
+    animTimePassed = 0;
+}
+
+void Game::endMoveAnim() {
+    for (auto tile : renderList_) {
+        tile->setI(tile->getNewI());
+        tile->setJ(tile->getNewJ());
+    }
+
+    areTilesMoving = false;
+    cleanMerged();
+}
+

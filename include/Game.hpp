@@ -10,18 +10,22 @@ namespace sf {
     class RenderWindow;
 }
 
+extern const float ANIM_TIME;
+
 class Game
 {
     public:
         static sf::Font font;
-
+        
+        bool areTilesMoving;
+        float animTimePassed;
+        
         int numTiles;
-
         Game();
         ~Game();
         
         void reset();
-        
+
         int getCols() const;
         int getRows() const;
         Tile* getCell(int i, int j) const;
@@ -36,17 +40,25 @@ class Game
         bool isMoveRightAvailable() const;
         bool isMoveUpAvailable() const;
         bool isMoveDownAvailable() const;
+        
 
         void addTileToRenderList(Tile* tile);
         void removeTileFromRenderList(Tile * tile);
         void placeTileOnGrid(Tile* tile, int i, int j);
         void resetGridCell(int i, int j);
         void generateRandomTile();
-
+        
+        
         void moveLeft();
         void moveRight();
         void moveUp();
         void moveDown();
+        
+        void startMoveAnim();
+        void endMoveAnim();
+        void update(float deltaTime);
+        
+        void cleanMerged();
         
         void draw(sf::RenderWindow& window);
 

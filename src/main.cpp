@@ -11,15 +11,21 @@ int main()
     sf::RenderWindow window(sf::VideoMode({800, 800}), "My window");
     
     Game game;
+    sf::Clock clock;
 
     while (window.isOpen())
     {   
+        sf::Time deltaTime = clock.restart();
+        float dt = deltaTime.asSeconds();
+
         while (const auto event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
 
             if (const sf::Event::KeyPressed *keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+
+                game.endMoveAnim();
 
                 switch (keyPressed->scancode)
                 {
@@ -55,9 +61,12 @@ int main()
                         }
                         break;
                 }
-
+                game.startMoveAnim();
             }
         }
+
+        game.update(dt);
+
         window.clear(sf::Color::Black);
         game.draw(window);
         window.display();
