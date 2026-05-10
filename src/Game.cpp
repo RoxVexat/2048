@@ -249,7 +249,12 @@ void Game::reset()
 {
 
     cleanUp();
-    numTiles = 0;
+    numTiles = 0;   
+
+    rows_ = g_config.getGridDimension();
+    cols_ = g_config.getGridDimension();
+    
+    grid_.resize(rows_ * cols_);
 
     generateRandomTile();
     generateRandomTile();

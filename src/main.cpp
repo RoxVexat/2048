@@ -34,6 +34,32 @@ int main()
                         game.reset();
                         break;
 
+                    case sf::Keyboard::Scancode::Num4:
+                        g_config.setGridDimension(4);
+                        game.reset();
+                        break;
+
+                    case sf::Keyboard::Scancode::Num5:
+                        g_config.setGridDimension(5);
+                        game.reset();
+                        break;
+
+                    case sf::Keyboard::Scancode::Num6:
+                        g_config.setGridDimension(6);
+                        game.reset();
+                        break;
+
+                    case sf::Keyboard::Scancode::Num7:
+                        g_config.setGridDimension(7);
+                        game.reset();
+                        break;
+                        
+                    case sf::Keyboard::Scancode::Num8:
+                        g_config.setGridDimension(8);
+                        game.reset();
+                        break;
+                        
+
                     case sf::Keyboard::Scancode::W:
                     case sf::Keyboard::Scancode::Up:
                         if (game.isMoveUpAvailable()) {
