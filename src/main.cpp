@@ -32,6 +32,7 @@ int main()
                     case sf::Keyboard::Scancode::R:
                         game.reset();
                         break;
+
                     case sf::Keyboard::Scancode::W:
                     case sf::Keyboard::Scancode::Up:
                         if (game.isMoveUpAvailable()) {
@@ -61,7 +62,9 @@ int main()
                         }
                         break;
                 }
+
                 game.startMoveAnim();
+
             }
         }
 

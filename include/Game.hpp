@@ -57,7 +57,7 @@ class Game
         void startMoveAnim();
         void endMoveAnim();
         void update(float deltaTime);
-        
+
         void cleanMerged();
         
         void draw(sf::RenderWindow& window);

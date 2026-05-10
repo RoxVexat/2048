@@ -12,8 +12,9 @@ namespace sf {
 class Tile {
     
     public:
-        
+    
         static std::unordered_map<int, sf::Color> colorMap;
+        bool isPoppingUp;
 
         Tile(Game &game, int i, int j, int val);
         ~Tile();
@@ -46,7 +47,7 @@ class Tile {
         void draw(sf::RenderWindow &window);
 
     private:
-        static inline int size = 150;
+        static inline float size = 150.0f;
         sf::RectangleShape* shape;
         Game &game;
 
@@ -57,4 +58,6 @@ class Tile {
         int newJ;
         bool merged;
         int val;
+
+    
 };

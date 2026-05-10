@@ -8,7 +8,7 @@
 
 #include "Tile.hpp"
 
-const float ANIM_TIME = 0.10;
+const float ANIM_TIME = 0.1;
 
 
 sf::Font Game::font("arial.ttf");
@@ -253,6 +253,7 @@ void Game::endMoveAnim() {
     for (auto tile : renderList_) {
         tile->setI(tile->getNewI());
         tile->setJ(tile->getNewJ());
+        tile->isPoppingUp = false;
     }
 
     areTilesMoving = false;

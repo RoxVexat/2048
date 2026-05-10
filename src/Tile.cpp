@@ -32,6 +32,7 @@ Tile::Tile(Game &game, int i, int j, int val)
       val(val),
       game(game),
       merged(false),
+      isPoppingUp(true),
       shape(new sf::RectangleShape(sf::Vector2f(size, size)))
     {   
         game.placeTileOnGrid(this, i, j);
@@ -40,6 +41,7 @@ Tile::Tile(Game &game, int i, int j, int val)
     }
 
 Tile::~Tile() {
+    delete shape;
     game.numTiles--;
 }
 
@@ -187,8 +189,11 @@ void Tile::draw(sf::RenderWindow& window)
     sf::Text text(game.font);
     
     text.setString(std::to_string(val));
-    text.setCharacterSize(100 - static_cast<int>(std::log10(val)) * 12);
     text.setFillColor(sf::Color::Black);
+    text.setCharacterSize((100 - static_cast<int>(std::log10(val)) * 12));
+    
+    if (isPoppingUp)
+        text.setCharacterSize(text.getCharacterSize() * game.animTimePassed / ANIM_TIME);
 
     const sf::FloatRect textBounds = text.getLocalBounds();
 
@@ -199,7 +204,17 @@ void Tile::draw(sf::RenderWindow& window)
 
     float x = getX() + (getNewX() - getX()) * game.animTimePassed / ANIM_TIME;
     float y = getY() + (getNewY() - getY()) * game.animTimePassed / ANIM_TIME;
-    shape->setPosition({x, y});
+    
+    if (isPoppingUp) {
+        const float popUpSize = size *  game.animTimePassed / ANIM_TIME;
+        float popUpX = x + (size - popUpSize) / 2;
+        float popUpY = y + (size - popUpSize) / 2;
+        shape->setSize({popUpSize, popUpSize});
+        shape->setPosition({popUpX, popUpY});
+    } else {
+        shape->setSize({size, size});
+        shape->setPosition({x, y});
+    }
 
     sf::Color tileColor;
     auto it = colorMap.find(val);
@@ -210,11 +225,9 @@ void Tile::draw(sf::RenderWindow& window)
 
     shape->setFillColor(tileColor);
 
-   
-    const sf::FloatRect shapeBounds = shape->getGlobalBounds();
     text.setPosition({
-        shapeBounds.position.x + shapeBounds.size.x / 2.0f,
-        shapeBounds.position.y + shapeBounds.size.y / 2.0f
+        x + size / 2,
+        y + size / 2
     });
 
     window.draw(*shape);
