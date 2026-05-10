@@ -9,7 +9,6 @@
 #include "Tile.hpp"
 #include "Config.hpp"
 
-
 sf::Font Game::font("arial.ttf");
 
 Game::Game()
@@ -20,7 +19,8 @@ Game::Game()
     generateRandomTile();
 }
 
-Game::~Game() {
+Game::~Game()
+{
     cleanUp();
 }
 
@@ -30,28 +30,31 @@ const std::vector<Tile *> &Game::getGrid() const { return grid_; }
 const std::vector<Tile *> &Game::getRenderList() const { return renderList_; }
 Tile *Game::getCell(int i, int j) const
 {
-     return grid_[i * cols_ + j];
+    return grid_[i * cols_ + j];
 }
 
 std::vector<Tile *> &Game::getGrid() { return grid_; }
 std::vector<Tile *> &Game::getRenderList() { return renderList_; }
 
-
-bool Game::gameOver() const {
+bool Game::gameOver() const
+{
     return !(
         isMoveLeftAvailable() ||
         isMoveRightAvailable() ||
         isMoveUpAvailable() ||
-        isMoveDownAvailable()
-    );
+        isMoveDownAvailable());
 }
 
-bool Game::isMoveLeftAvailable() const {
-    for (int i = 0; i < rows_; i++) {
-        for (int j = 1; j < cols_; j++) {
+bool Game::isMoveLeftAvailable() const
+{
+    for (int i = 0; i < rows_; i++)
+    {
+        for (int j = 1; j < cols_; j++)
+        {
             auto curTile = getCell(i, j);
-            if (curTile) {
-                auto leftTile = getCell(i, j-1);
+            if (curTile)
+            {
+                auto leftTile = getCell(i, j - 1);
                 if (!leftTile || curTile->getVal() == leftTile->getVal())
                     return true;
             }
@@ -60,12 +63,16 @@ bool Game::isMoveLeftAvailable() const {
     return false;
 }
 
-bool Game::isMoveRightAvailable() const {
-    for (int i = 0; i < rows_; i++) {
-        for (int j = 0; j < cols_ - 1; j++) {
+bool Game::isMoveRightAvailable() const
+{
+    for (int i = 0; i < rows_; i++)
+    {
+        for (int j = 0; j < cols_ - 1; j++)
+        {
             auto curTile = getCell(i, j);
-            if (curTile) {
-                auto rightTile = getCell(i, j+1);
+            if (curTile)
+            {
+                auto rightTile = getCell(i, j + 1);
                 if (!rightTile || curTile->getVal() == rightTile->getVal())
                     return true;
             }
@@ -74,12 +81,16 @@ bool Game::isMoveRightAvailable() const {
     return false;
 }
 
-bool Game::isMoveUpAvailable() const {
-    for (int i = 1; i < rows_; i++) {
-        for (int j = 0; j < cols_; j++) {
+bool Game::isMoveUpAvailable() const
+{
+    for (int i = 1; i < rows_; i++)
+    {
+        for (int j = 0; j < cols_; j++)
+        {
             auto curTile = getCell(i, j);
-            if (curTile) {
-                auto topTile = getCell(i-1, j);
+            if (curTile)
+            {
+                auto topTile = getCell(i - 1, j);
                 if (!topTile || curTile->getVal() == topTile->getVal())
                     return true;
             }
@@ -88,12 +99,16 @@ bool Game::isMoveUpAvailable() const {
     return false;
 }
 
-bool Game::isMoveDownAvailable() const {
-    for (int i = 0; i < rows_ - 1; i++) {
-        for (int j = 0; j < cols_; j++) {
+bool Game::isMoveDownAvailable() const
+{
+    for (int i = 0; i < rows_ - 1; i++)
+    {
+        for (int j = 0; j < cols_; j++)
+        {
             auto curTile = getCell(i, j);
-            if (curTile) {
-                auto bottomTile = getCell(i+1, j);
+            if (curTile)
+            {
+                auto bottomTile = getCell(i + 1, j);
                 if (!bottomTile || curTile->getVal() == bottomTile->getVal())
                     return true;
             }
@@ -122,8 +137,9 @@ void Game::resetGridCell(int i, int j)
     grid_[i * cols_ + j] = nullptr;
 }
 
-void Game::generateRandomTile() {
-    
+void Game::generateRandomTile()
+{
+
     if (gameOver() && numTiles > 2)
         return;
 
@@ -135,19 +151,23 @@ void Game::generateRandomTile() {
 
     int randI = rowDist(gen);
     int randJ = colDist(gen);
-    
-    while (getCell(randI, randJ)) {
+
+    while (getCell(randI, randJ))
+    {
         randI = rowDist(gen);
         randJ = colDist(gen);
-    } 
-    
+    }
+
     int power = powerDist(gen);
-    Tile* newTile = new Tile(*this, randI, randJ, 1 << power);
+    Tile *newTile = new Tile(*this, randI, randJ, 1 << power);
 }
 
-void Game::cleanMerged() {
-    for (auto &tile : renderList_) {
-        if (tile && tile->isMerged()) {
+void Game::cleanMerged()
+{
+    for (auto &tile : renderList_)
+    {
+        if (tile && tile->isMerged())
+        {
             delete tile;
             tile = nullptr;
         }
@@ -208,18 +228,21 @@ void Game::moveDown()
     }
 }
 
-void Game::cleanUp() {
+void Game::cleanUp()
+{
     for (auto tile : renderList_)
         delete tile;
 
     renderList_.clear();
 
-    for (auto& ptr : grid_) {
+    for (auto &ptr : grid_)
+    {
         ptr = nullptr;
     }
 }
 
-void Game::reset() {
+void Game::reset()
+{
 
     cleanUp();
     numTiles = 0;
@@ -228,21 +251,27 @@ void Game::reset() {
     generateRandomTile();
 }
 
-void Game::update(float deltaTime) {
-    if (areTilesMoving) {
+void Game::update(float deltaTime)
+{
+    if (areTilesMoving)
+    {
         animTimePassed = std::min(ANIM_TIME, animTimePassed + deltaTime);
-        if (animTimePassed == ANIM_TIME) {
-            
+        if (animTimePassed == ANIM_TIME)
+        {
+            areTilesMoving = false;
         }
     }
 }
-void Game::startMoveAnim() {
+void Game::startMoveAnim()
+{
     areTilesMoving = true;
     animTimePassed = 0;
 }
 
-void Game::endMoveAnim() {
-    for (auto tile : renderList_) {
+void Game::endMoveAnim()
+{
+    for (auto tile : renderList_)
+    {
         tile->setI(tile->getNewI());
         tile->setJ(tile->getNewJ());
         tile->isPoppingUp = false;
@@ -253,7 +282,7 @@ void Game::endMoveAnim() {
 }
 
 void Game::draw(sf::RenderWindow &window)
-{   
+{
     drawGridBackground(window);
     for (auto tile : renderList_)
     {
@@ -261,19 +290,28 @@ void Game::draw(sf::RenderWindow &window)
     }
 }
 
-void Game::drawGridBackground(sf::RenderWindow &window) {
-    float bgSize = TILE_SIZE*rows_ + GAP_SIZE*(rows_ + 1);
-    sf::RectangleShape bg({bgSize - 0.75f*GAP_SIZE, bgSize-0.75f*GAP_SIZE});
-    bg.setFillColor(sf::Color(42, 42, 42));
-    bg.setPosition({GRID_OFFSET + 0.375f*GAP_SIZE, GRID_OFFSET + 0.375f*GAP_SIZE}); 
-    window.draw(bg);
-    
+void Game::drawGridBackground(sf::RenderWindow &window)
+{
+    const float bgSize = TILE_SIZE * rows_ + GAP_SIZE * (rows_ + 1);
+    const float lineOffset = (GAP_SIZE - GRID_LINE_WIDTH) / 2;  
 
-    for (int i = 0; i <= rows_; i++) {
-        float lineCoord1 = GRID_OFFSET + 0.375f * GAP_SIZE;
-        float lineCoord2 = GRID_OFFSET + TILE_SIZE * i + GAP_SIZE * (i + 0.375f);
-        sf::RectangleShape vLine({GAP_SIZE/4, bgSize - 0.75f*GAP_SIZE});
-        sf::RectangleShape hLine({bgSize - 0.75f*GAP_SIZE, GAP_SIZE/4});
+    // sf::RectangleShape bg({bgSize - lineOffset*2, bgSize-lineOffset*2});
+    // bg.setPosition({GRID_OFFSET+lineOffset, GRID_OFFSET+lineOffset});
+
+    sf::RectangleShape bg({bgSize, bgSize});
+    bg.setPosition({GRID_OFFSET, GRID_OFFSET});
+
+    bg.setFillColor(sf::Color(42, 42, 42)); 
+    window.draw(bg);
+
+    for (int i = 0; i <= rows_; i++)
+    {   
+        
+
+        float lineCoord1 = GRID_OFFSET + lineOffset;
+        float lineCoord2 = GRID_OFFSET + TILE_SIZE*i + GAP_SIZE*i + lineOffset;
+        sf::RectangleShape vLine({GRID_LINE_WIDTH, bgSize - 2*lineOffset});
+        sf::RectangleShape hLine({bgSize - 2*lineOffset, GRID_LINE_WIDTH});
 
         vLine.setPosition({lineCoord2, lineCoord1});
         hLine.setPosition({lineCoord1, lineCoord2});
@@ -285,6 +323,4 @@ void Game::drawGridBackground(sf::RenderWindow &window) {
         window.draw(vLine);
         window.draw(hLine);
     }
-
-}   
-
+}
