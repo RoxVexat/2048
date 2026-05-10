@@ -231,13 +231,27 @@ void Game::moveDown()
     }
 }
 
-void Game::handleKeyPress(const sf::Event::KeyPressed* keyPressed) {
-    switch (keyPressed->scancode)
+void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window) {
+    switch (keyPressed.scancode)
     {
         case sf::Keyboard::Scancode::R:
             reset();
             break;
 
+        case sf::Keyboard::Scancode::Escape:
+            window.close();
+
+        
+        case sf::Keyboard::Scancode::Equal:
+        case sf::Keyboard::Scancode::NumpadPlus:
+            g_config.setGridSize(g_config.getGridSize() + 50);
+            break;
+
+        case sf::Keyboard::Scancode::Hyphen:
+        case sf::Keyboard::Scancode::NumpadMinus:
+            g_config.setGridSize(g_config.getGridSize() - 50);
+            break;
+        
         case sf::Keyboard::Scancode::Num4:
             g_config.setGridDimension(4);
             reset();
@@ -376,9 +390,6 @@ void Game::drawGridBackground(sf::RenderWindow &window)
 
     sf::RectangleShape bg({bgSize - lineOffset*2, bgSize-lineOffset*2});
     bg.setPosition({gridOffset+lineOffset, gridOffset+lineOffset});
-
-    // sf::RectangleShape bg({bgSize, bgSize});
-    // bg.setPosition({gridOffset, gridOffset});
 
     bg.setFillColor(sf::Color(42, 42, 42)); 
     window.draw(bg);

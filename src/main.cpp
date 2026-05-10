@@ -29,7 +29,7 @@ int main()
 
                 game.endMoveAnim();
 
-                game.handleKeyPress(keyPressed);
+                game.handleKeyPress(*keyPressed, window);
 
                 game.startMoveAnim();
 

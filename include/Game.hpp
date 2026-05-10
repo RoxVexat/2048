@@ -39,7 +39,7 @@ class Game
         
 
         void addTileToRenderList(Tile* tile);
-        void removeTileFromRenderList(Tile * tile);
+        void removeTileFromRenderList(Tile* tile);
         void placeTileOnGrid(Tile* tile, int i, int j);
         void resetGridCell(int i, int j);
         void generateRandomTile();
@@ -50,7 +50,7 @@ class Game
         void moveUp();
         void moveDown();
         
-        void handleKeyPress(const sf::Event::KeyPressed* keyPressed);
+        void handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window);
 
         void startMoveAnim();
         void endMoveAnim();
