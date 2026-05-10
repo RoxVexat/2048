@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Game.hpp"
-
+#include "Config.hpp"
 
 std::unordered_map<int, sf::Color> Tile::colorMap = {
     {2, sf::Color(0x00, 0xff, 0x91)},
@@ -22,6 +22,9 @@ std::unordered_map<int, sf::Color> Tile::colorMap = {
     {2048, sf::Color(0xff, 0x00, 0xe1)},
     {4096, sf::Color(0xb3, 0x00, 0xff)},
     {8192, sf::Color(0x66, 0x00, 0xff)},
+    {16384, sf::Color(0x00, 0x08, 0xff)},
+    {32768, sf::Color(0x00, 0x88, 0xff)},
+    {65536, sf::Color(0x00, 0xe5, 0xff)}
 };
 
 Tile::Tile(Game &game, int i, int j, int val)
@@ -33,7 +36,7 @@ Tile::Tile(Game &game, int i, int j, int val)
       game(game),
       merged(false),
       isPoppingUp(true),
-      shape(new sf::RectangleShape(sf::Vector2f(size, size)))
+      shape(new sf::RectangleShape(sf::Vector2f(TILE_SIZE, TILE_SIZE)))
     {   
         game.placeTileOnGrid(this, i, j);
         game.addTileToRenderList(this);
@@ -47,19 +50,19 @@ Tile::~Tile() {
 
 float Tile::getX() const
 {
-    return (j + 1) * 40 + j * size;
+    return GRID_OFFSET + (j + 1) * GAP_SIZE + j * TILE_SIZE;
 }
 float Tile::getY() const
 {
-    return (i + 1) * 40 + i * size;
+     return GRID_OFFSET + (i + 1) * GAP_SIZE + i * TILE_SIZE;
 }
 float Tile::getNewX() const
 {
-    return (newJ + 1) * 40 + newJ * size;
+    return GRID_OFFSET + (newJ + 1) * GAP_SIZE + newJ * TILE_SIZE;
 }
 float Tile::getNewY() const
 {
-    return (newI + 1) * 40 + newI * size;
+    return GRID_OFFSET + (newI + 1) * GAP_SIZE + newI * TILE_SIZE;
 }
 bool Tile::isMerged() const { return merged; }
 
@@ -190,8 +193,8 @@ void Tile::draw(sf::RenderWindow& window)
     
     text.setString(std::to_string(val));
     text.setFillColor(sf::Color::Black);
-    text.setCharacterSize((100 - static_cast<int>(std::log10(val)) * 12));
-    
+    text.setCharacterSize((FONT_SIZE - static_cast<int>(std::log10(val)) * 12));
+
     if (isPoppingUp)
         text.setCharacterSize(text.getCharacterSize() * game.animTimePassed / ANIM_TIME);
 
@@ -206,13 +209,13 @@ void Tile::draw(sf::RenderWindow& window)
     float y = getY() + (getNewY() - getY()) * game.animTimePassed / ANIM_TIME;
     
     if (isPoppingUp) {
-        const float popUpSize = size *  game.animTimePassed / ANIM_TIME;
-        float popUpX = x + (size - popUpSize) / 2;
-        float popUpY = y + (size - popUpSize) / 2;
+        const float popUpSize = TILE_SIZE *  game.animTimePassed / ANIM_TIME;
+        float popUpX = x + (TILE_SIZE - popUpSize) / 2;
+        float popUpY = y + (TILE_SIZE - popUpSize) / 2;
         shape->setSize({popUpSize, popUpSize});
         shape->setPosition({popUpX, popUpY});
     } else {
-        shape->setSize({size, size});
+        shape->setSize({TILE_SIZE, TILE_SIZE});
         shape->setPosition({x, y});
     }
 
@@ -226,8 +229,8 @@ void Tile::draw(sf::RenderWindow& window)
     shape->setFillColor(tileColor);
 
     text.setPosition({
-        x + size / 2,
-        y + size / 2
+        x + TILE_SIZE / 2,
+        y + TILE_SIZE / 2
     });
 
     window.draw(*shape);

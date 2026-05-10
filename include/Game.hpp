@@ -61,6 +61,7 @@ class Game
         void cleanMerged();
         
         void draw(sf::RenderWindow& window);
+        void drawGridBackground(sf::RenderWindow& window);
 
     private:
         void cleanUp();

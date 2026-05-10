@@ -8,7 +8,7 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({800, 800}), "My window");
+    sf::RenderWindow window(sf::VideoMode({800, 800}), "2048");
     
     Game game;
     sf::Clock clock;

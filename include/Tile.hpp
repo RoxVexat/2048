@@ -47,7 +47,6 @@ class Tile {
         void draw(sf::RenderWindow &window);
 
     private:
-        static inline float size = 150.0f;
         sf::RectangleShape* shape;
         Game &game;
 

@@ -7,8 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Tile.hpp"
-
-const float ANIM_TIME = 0.1;
+#include "Config.hpp"
 
 
 sf::Font Game::font("arial.ttf");
@@ -23,13 +22,6 @@ Game::Game()
 
 Game::~Game() {
     cleanUp();
-}
-void Game::draw(sf::RenderWindow &window)
-{
-    for (auto tile : renderList_)
-    {
-        tile->draw(window);
-    }
 }
 
 int Game::getRows() const { return rows_; }
@@ -139,7 +131,7 @@ void Game::generateRandomTile() {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> rowDist(0, rows_ - 1);
     std::uniform_int_distribution<> colDist(0, cols_ - 1);
-    std::uniform_int_distribution<> shiftDist(0, 1);
+    std::uniform_int_distribution<> powerDist(1, 2);
 
     int randI = rowDist(gen);
     int randJ = colDist(gen);
@@ -149,8 +141,8 @@ void Game::generateRandomTile() {
         randJ = colDist(gen);
     } 
     
-    int shift = shiftDist(gen);
-    Tile* newTile = new Tile(*this, randI, randJ, 2 << shift);
+    int power = powerDist(gen);
+    Tile* newTile = new Tile(*this, randI, randJ, 1 << power);
 }
 
 void Game::cleanMerged() {
@@ -259,4 +251,21 @@ void Game::endMoveAnim() {
     areTilesMoving = false;
     cleanMerged();
 }
+
+void Game::draw(sf::RenderWindow &window)
+{   
+    drawGridBackground(window);
+    for (auto tile : renderList_)
+    {
+        tile->draw(window);
+    }
+}
+
+void Game::drawGridBackground(sf::RenderWindow &window) {
+    float bgSize = TILE_SIZE*rows_ + GAP_SIZE*(rows_ + 1);
+    sf::RectangleShape bg({bgSize, bgSize});
+    bg.setFillColor(sf::Color(42, 42, 42));
+    bg.setPosition({GRID_OFFSET, GRID_OFFSET}); 
+    window.draw(bg);
+}   
 

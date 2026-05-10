@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Example)
+project(2048)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,7 +11,7 @@ set(SFML_LIB_DIR "${SFML_DIR}/lib")
 add_executable(test 
     src/main.cpp
     src/Tile.cpp
-    src/Game.cpp    
+    src/Game.cpp
 )
 
 target_include_directories(test PRIVATE
