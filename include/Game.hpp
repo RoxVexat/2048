@@ -10,8 +10,6 @@ namespace sf {
     class RenderWindow;
 }
 
-extern const float ANIM_TIME;
-
 class Game
 {
     public:

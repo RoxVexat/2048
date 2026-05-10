@@ -1,17 +1,50 @@
 #pragma once
 
-inline constexpr float WINDOW_SIZE = 800;
-inline constexpr float GRID_SIZE = 640;
-inline constexpr float GAP_TO_TILE_SPACE_RATIO = 0.24;
-inline constexpr int GRID_DIMENSION = 4;
+class Config {
+    public:
 
+        Config(
+            float windowSize = 800,
+            float gridSize = 640,
+            float gapRatio = 0.24f,
+            float animTime = 0.1f,
+            int gridDimension = 4
+        );
 
-inline constexpr float GRID_OFFSET = (WINDOW_SIZE - GRID_SIZE) / 2;
-inline constexpr float TILE_SIZE = GRID_SIZE * (1 - GAP_TO_TILE_SPACE_RATIO) / GRID_DIMENSION;
-inline constexpr float GAP_SIZE = GRID_SIZE * GAP_TO_TILE_SPACE_RATIO / (GRID_DIMENSION + 1);
-inline constexpr float GRID_LINE_WIDTH = GAP_SIZE / 4;
+        float getWindowSize() const;
+        float getGridSize() const;
+        float getGapRatio() const;
+        float getAnimTime() const;
+        int getGridDimension() const;
+    
+        float getGridOffset() const;
+        float getTileSize() const;
+        float getGapSize() const;
+        float getGridLineWidth() const;
+        int getFontSize() const;
+    
 
+        void setWindowSize(float windowSize);
+        void setGridSize(float gridSize);
+        void setGapRatio(float gapRatio);
+        void setAnimTime(float animTime);
+        void setGridDimension(int gridDimension);
 
-inline constexpr int FONT_SIZE = TILE_SIZE * 2/3;
+    private:
 
-inline constexpr float ANIM_TIME = 0.1;
+        void calculateDerived();
+
+        float windowSize;
+        float gridSize;
+        float gapRatio;
+        int gridDimension;
+        
+        float gridOffset;
+        float tileSize;
+        float gapSize;
+        float gridLineWidth;
+        float animTime;
+        int fontSize;
+};
+
+extern Config g_config;

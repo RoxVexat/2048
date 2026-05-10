@@ -12,8 +12,12 @@
 sf::Font Game::font("arial.ttf");
 
 Game::Game()
-    : rows_(GRID_DIMENSION), cols_(GRID_DIMENSION), grid_(rows_ * cols_),
-      numTiles(0), animTimePassed(ANIM_TIME), areTilesMoving(false)
+    : rows_(g_config.getGridDimension()),
+      cols_(g_config.getGridDimension()),
+      grid_(rows_ * cols_),
+      animTimePassed(g_config.getAnimTime()),
+      areTilesMoving(false),
+      numTiles(0)
 {
     generateRandomTile();
     generateRandomTile();
@@ -255,8 +259,8 @@ void Game::update(float deltaTime)
 {
     if (areTilesMoving)
     {
-        animTimePassed = std::min(ANIM_TIME, animTimePassed + deltaTime);
-        if (animTimePassed == ANIM_TIME)
+        animTimePassed = std::min(g_config.getAnimTime(), animTimePassed + deltaTime);
+        if (animTimePassed == g_config.getAnimTime())
         {
             areTilesMoving = false;
         }
@@ -291,15 +295,21 @@ void Game::draw(sf::RenderWindow &window)
 }
 
 void Game::drawGridBackground(sf::RenderWindow &window)
-{
-    const float bgSize = GRID_SIZE;
-    const float lineOffset = (GAP_SIZE - GRID_LINE_WIDTH) / 2;  
+{   
+    const float tileSize = g_config.getTileSize();
+    const float gridSize = g_config.getGridSize();
+    const float gapSize = g_config.getGapSize();
+    const float gridLineWidth = g_config.getGridLineWidth();
+    const float gridOffset = g_config.getGridOffset();
+
+    const float bgSize = gridSize;
+    const float lineOffset = (gapSize - gridLineWidth) / 2;  
 
     sf::RectangleShape bg({bgSize - lineOffset*2, bgSize-lineOffset*2});
-    bg.setPosition({GRID_OFFSET+lineOffset, GRID_OFFSET+lineOffset});
+    bg.setPosition({gridOffset+lineOffset, gridOffset+lineOffset});
 
     // sf::RectangleShape bg({bgSize, bgSize});
-    // bg.setPosition({GRID_OFFSET, GRID_OFFSET});
+    // bg.setPosition({gridOffset, gridOffset});
 
     bg.setFillColor(sf::Color(42, 42, 42)); 
     window.draw(bg);
@@ -307,10 +317,10 @@ void Game::drawGridBackground(sf::RenderWindow &window)
     for (int i = 0; i <= rows_; i++)
     {   
         
-        float lineCoord1 = GRID_OFFSET + lineOffset;
-        float lineCoord2 = GRID_OFFSET + TILE_SIZE*i + GAP_SIZE*i + lineOffset;
-        sf::RectangleShape vLine({GRID_LINE_WIDTH, bgSize - 2*lineOffset});
-        sf::RectangleShape hLine({bgSize - 2*lineOffset, GRID_LINE_WIDTH});
+        float lineCoord1 = gridOffset + lineOffset;
+        float lineCoord2 = gridOffset + tileSize *i + gapSize*i + lineOffset;
+        sf::RectangleShape vLine({gridLineWidth, bgSize - 2*lineOffset});
+        sf::RectangleShape hLine({bgSize - 2*lineOffset, gridLineWidth});
 
         vLine.setPosition({lineCoord2, lineCoord1});
         hLine.setPosition({lineCoord1, lineCoord2});

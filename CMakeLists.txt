@@ -12,6 +12,7 @@ add_executable(test
     src/main.cpp
     src/Tile.cpp
     src/Game.cpp
+    src/Config.cpp
 )
 
 target_include_directories(test PRIVATE

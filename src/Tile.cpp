@@ -36,7 +36,8 @@ Tile::Tile(Game &game, int i, int j, int val)
       game(game),
       merged(false),
       isPoppingUp(true),
-      shape(new sf::RectangleShape(sf::Vector2f(TILE_SIZE, TILE_SIZE)))
+      shape(new sf::RectangleShape(sf::Vector2f(
+        g_config.getTileSize(), g_config.getTileSize())))
     {   
         game.placeTileOnGrid(this, i, j);
         game.addTileToRenderList(this);
@@ -50,19 +51,19 @@ Tile::~Tile() {
 
 float Tile::getX() const
 {
-    return GRID_OFFSET + (j + 1) * GAP_SIZE + j * TILE_SIZE;
+    return g_config.getGridOffset() + (j + 1) * g_config.getGapSize() + j * g_config.getTileSize();
 }
 float Tile::getY() const
 {
-     return GRID_OFFSET + (i + 1) * GAP_SIZE + i * TILE_SIZE;
+     return g_config.getGridOffset() + (i + 1) * g_config.getGapSize() + i * g_config.getTileSize();
 }
 float Tile::getNewX() const
 {
-    return GRID_OFFSET + (newJ + 1) * GAP_SIZE + newJ * TILE_SIZE;
+    return g_config.getGridOffset() + (newJ + 1) * g_config.getGapSize() + newJ * g_config.getTileSize();
 }
 float Tile::getNewY() const
 {
-    return GRID_OFFSET + (newI + 1) * GAP_SIZE + newI * TILE_SIZE;
+    return g_config.getGridOffset() + (newI + 1) * g_config.getGapSize() + newI * g_config.getTileSize();
 }
 bool Tile::isMerged() const { return merged; }
 
@@ -103,7 +104,7 @@ void Tile::moveRight() {
             
         }
     }
-};
+}
 
 void Tile::moveLeft() {
     auto &grid = game.getGrid();
@@ -130,7 +131,7 @@ void Tile::moveLeft() {
             tile2->markAsMerged();
         }
     }
-};
+}
 
 void Tile::moveUp() {
     auto &grid = game.getGrid();
@@ -157,7 +158,7 @@ void Tile::moveUp() {
             tile2->markAsMerged();
         }
     }
-};
+}
 
 void Tile::moveDown(){
     auto &grid = game.getGrid();
@@ -189,14 +190,19 @@ void Tile::moveDown(){
 
 void Tile::draw(sf::RenderWindow& window)
 {   
+
+    const float tileSize = g_config.getTileSize();
+    const float animTime = g_config.getAnimTime();
+    const float fontSize = g_config.getFontSize();
+
     sf::Text text(game.font);
-    
+
     text.setString(std::to_string(val));
     text.setFillColor(sf::Color::Black);
-    text.setCharacterSize((FONT_SIZE - static_cast<int>(std::log10(val)) * 12.0f * TILE_SIZE / 120.0f));
+    text.setCharacterSize((fontSize - static_cast<int>(std::log10(val)) * 12.0f * tileSize / 120.0f));
 
     if (isPoppingUp)
-        text.setCharacterSize(text.getCharacterSize() * game.animTimePassed / ANIM_TIME);
+        text.setCharacterSize(text.getCharacterSize() * game.animTimePassed / animTime);
 
     const sf::FloatRect textBounds = text.getLocalBounds();
 
@@ -205,17 +211,17 @@ void Tile::draw(sf::RenderWindow& window)
         textBounds.position.y + textBounds.size.y / 2.0f
     });
 
-    float x = getX() + (getNewX() - getX()) * game.animTimePassed / ANIM_TIME;
-    float y = getY() + (getNewY() - getY()) * game.animTimePassed / ANIM_TIME;
+    float x = getX() + (getNewX() - getX()) * game.animTimePassed / animTime;
+    float y = getY() + (getNewY() - getY()) * game.animTimePassed / animTime;
     
     if (isPoppingUp) {
-        const float popUpSize = TILE_SIZE *  game.animTimePassed / ANIM_TIME;
-        float popUpX = x + (TILE_SIZE - popUpSize) / 2;
-        float popUpY = y + (TILE_SIZE - popUpSize) / 2;
+        const float popUpSize = tileSize *  game.animTimePassed / animTime;
+        float popUpX = x + (tileSize - popUpSize) / 2;
+        float popUpY = y + (tileSize - popUpSize) / 2;
         shape->setSize({popUpSize, popUpSize});
         shape->setPosition({popUpX, popUpY});
     } else {
-        shape->setSize({TILE_SIZE, TILE_SIZE});
+        shape->setSize({tileSize, tileSize});
         shape->setPosition({x, y});
     }
 
@@ -229,8 +235,8 @@ void Tile::draw(sf::RenderWindow& window)
     shape->setFillColor(tileColor);
 
     text.setPosition({
-        x + TILE_SIZE / 2,
-        y + TILE_SIZE / 2
+        x + tileSize / 2,
+        y + tileSize / 2
     });
 
     window.draw(*shape);
