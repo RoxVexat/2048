@@ -1,12 +1,11 @@
 #include "Tile.hpp"
 
+#include "Game.hpp"
+#include "Config.hpp"
+
 #include <iostream>
 #include <cmath> 
 
-#include <SFML/Graphics.hpp>
-
-#include "Game.hpp"
-#include "Config.hpp"
 
 std::unordered_map<int, sf::Color> Tile::colorMap = {
     {2, sf::Color(0x00, 0xff, 0x91)},

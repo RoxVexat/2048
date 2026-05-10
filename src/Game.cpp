@@ -1,13 +1,12 @@
 #include "Game.hpp"
 
+#include "Tile.hpp"
+#include "Config.hpp"
+
 #include <algorithm>
 #include <iostream>
 #include <random>
 
-#include <SFML/Graphics.hpp>
-
-#include "Tile.hpp"
-#include "Config.hpp"
 
 sf::Font Game::font("arial.ttf");
 
@@ -231,6 +230,71 @@ void Game::moveDown()
         }
     }
 }
+
+void Game::handleKeyPress(const sf::Event::KeyPressed* keyPressed) {
+    switch (keyPressed->scancode)
+    {
+        case sf::Keyboard::Scancode::R:
+            reset();
+            break;
+
+        case sf::Keyboard::Scancode::Num4:
+            g_config.setGridDimension(4);
+            reset();
+            break;
+
+        case sf::Keyboard::Scancode::Num5:
+            g_config.setGridDimension(5);
+            reset();
+            break;
+
+        case sf::Keyboard::Scancode::Num6:
+            g_config.setGridDimension(6);
+            reset();
+            break;
+
+        case sf::Keyboard::Scancode::Num7:
+            g_config.setGridDimension(7);
+            reset();
+            break;
+            
+        case sf::Keyboard::Scancode::Num8:
+            g_config.setGridDimension(8);
+            reset();
+            break;
+            
+
+        case sf::Keyboard::Scancode::W:
+        case sf::Keyboard::Scancode::Up:
+            if (isMoveUpAvailable()) {
+                moveUp();
+                generateRandomTile();
+            }
+            break;
+        case sf::Keyboard::Scancode::S:
+        case sf::Keyboard::Scancode::Down:
+            if (isMoveDownAvailable()) {
+                moveDown();
+                generateRandomTile();
+            }
+            break;
+        case sf::Keyboard::Scancode::A:
+        case sf::Keyboard::Scancode::Left:
+            if (isMoveLeftAvailable()) {
+                moveLeft();
+                generateRandomTile();
+            }   
+            break;
+        case sf::Keyboard::Scancode::D:
+        case sf::Keyboard::Scancode::Right:
+            if (isMoveRightAvailable()) {
+                moveRight();
+                generateRandomTile();
+            }
+            break;
+    }
+}
+
 
 void Game::cleanUp()
 {

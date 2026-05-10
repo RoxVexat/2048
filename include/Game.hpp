@@ -1,14 +1,12 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 #include <vector>
 #include <unordered_map>
 
-class Tile;
 
-namespace sf {
-    class Font;
-    class RenderWindow;
-}
+class Tile;
 
 class Game
 {
@@ -52,10 +50,11 @@ class Game
         void moveUp();
         void moveDown();
         
+        void handleKeyPress(const sf::Event::KeyPressed* keyPressed);
+
         void startMoveAnim();
         void endMoveAnim();
         void update(float deltaTime);
-
         void cleanMerged();
         
         void draw(sf::RenderWindow& window);

@@ -1,13 +1,10 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 #include <unordered_map>
 
 class Game;
-namespace sf {
-    class RectangleShape;
-    class RenderWindow;
-    class Color;
-}
 
 class Tile {
     
