@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 
 #include <iostream>
+#include "Config.hpp"
 
 int main()
 {

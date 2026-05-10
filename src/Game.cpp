@@ -12,7 +12,7 @@
 sf::Font Game::font("arial.ttf");
 
 Game::Game()
-    : rows_(4), cols_(4), grid_(rows_ * cols_),
+    : rows_(GRID_DIMENSION), cols_(GRID_DIMENSION), grid_(rows_ * cols_),
       numTiles(0), animTimePassed(ANIM_TIME), areTilesMoving(false)
 {
     generateRandomTile();
@@ -292,14 +292,14 @@ void Game::draw(sf::RenderWindow &window)
 
 void Game::drawGridBackground(sf::RenderWindow &window)
 {
-    const float bgSize = TILE_SIZE * rows_ + GAP_SIZE * (rows_ + 1);
+    const float bgSize = GRID_SIZE;
     const float lineOffset = (GAP_SIZE - GRID_LINE_WIDTH) / 2;  
 
-    // sf::RectangleShape bg({bgSize - lineOffset*2, bgSize-lineOffset*2});
-    // bg.setPosition({GRID_OFFSET+lineOffset, GRID_OFFSET+lineOffset});
+    sf::RectangleShape bg({bgSize - lineOffset*2, bgSize-lineOffset*2});
+    bg.setPosition({GRID_OFFSET+lineOffset, GRID_OFFSET+lineOffset});
 
-    sf::RectangleShape bg({bgSize, bgSize});
-    bg.setPosition({GRID_OFFSET, GRID_OFFSET});
+    // sf::RectangleShape bg({bgSize, bgSize});
+    // bg.setPosition({GRID_OFFSET, GRID_OFFSET});
 
     bg.setFillColor(sf::Color(42, 42, 42)); 
     window.draw(bg);
@@ -307,7 +307,6 @@ void Game::drawGridBackground(sf::RenderWindow &window)
     for (int i = 0; i <= rows_; i++)
     {   
         
-
         float lineCoord1 = GRID_OFFSET + lineOffset;
         float lineCoord2 = GRID_OFFSET + TILE_SIZE*i + GAP_SIZE*i + lineOffset;
         sf::RectangleShape vLine({GRID_LINE_WIDTH, bgSize - 2*lineOffset});

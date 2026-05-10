@@ -193,7 +193,7 @@ void Tile::draw(sf::RenderWindow& window)
     
     text.setString(std::to_string(val));
     text.setFillColor(sf::Color::Black);
-    text.setCharacterSize((FONT_SIZE - static_cast<int>(std::log10(val)) * 12));
+    text.setCharacterSize((FONT_SIZE - static_cast<int>(std::log10(val)) * 12.0f * TILE_SIZE / 120.0f));
 
     if (isPoppingUp)
         text.setCharacterSize(text.getCharacterSize() * game.animTimePassed / ANIM_TIME);
