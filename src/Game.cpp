@@ -263,9 +263,28 @@ void Game::draw(sf::RenderWindow &window)
 
 void Game::drawGridBackground(sf::RenderWindow &window) {
     float bgSize = TILE_SIZE*rows_ + GAP_SIZE*(rows_ + 1);
-    sf::RectangleShape bg({bgSize, bgSize});
+    sf::RectangleShape bg({bgSize - 0.75f*GAP_SIZE, bgSize-0.75f*GAP_SIZE});
     bg.setFillColor(sf::Color(42, 42, 42));
-    bg.setPosition({GRID_OFFSET, GRID_OFFSET}); 
+    bg.setPosition({GRID_OFFSET + 0.375f*GAP_SIZE, GRID_OFFSET + 0.375f*GAP_SIZE}); 
     window.draw(bg);
+    
+
+    for (int i = 0; i <= rows_; i++) {
+        float lineCoord1 = GRID_OFFSET + 0.375f * GAP_SIZE;
+        float lineCoord2 = GRID_OFFSET + TILE_SIZE * i + GAP_SIZE * (i + 0.375f);
+        sf::RectangleShape vLine({GAP_SIZE/4, bgSize - 0.75f*GAP_SIZE});
+        sf::RectangleShape hLine({bgSize - 0.75f*GAP_SIZE, GAP_SIZE/4});
+
+        vLine.setPosition({lineCoord2, lineCoord1});
+        hLine.setPosition({lineCoord1, lineCoord2});
+
+        sf::Color lineColor(20, 20, 20);
+        vLine.setFillColor(lineColor);
+        hLine.setFillColor(lineColor);
+
+        window.draw(vLine);
+        window.draw(hLine);
+    }
+
 }   
 
