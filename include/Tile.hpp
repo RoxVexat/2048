@@ -12,6 +12,7 @@ class Tile {
     
         static std::unordered_map<int, sf::Color> colorMap;
         bool isPoppingUp;
+        bool isNewTile;
 
         Tile(Game &game, int i, int j, int val);
         ~Tile();

@@ -36,8 +36,8 @@ Tile *Game::getCell(int i, int j) const
     return grid_[i * cols_ + j];
 }
 
-std::vector<Tile *> &Game::getGrid() { return grid_; }
-std::vector<Tile *> &Game::getRenderList() { return renderList_; }
+std::vector<Tile *>& Game::getGrid() { return grid_; }
+std::vector<Tile *>& Game::getRenderList() { return renderList_; }
 
 bool Game::gameOver() const
 {
@@ -179,6 +179,13 @@ void Game::cleanMerged()
     renderList_.erase(std::remove(renderList_.begin(), renderList_.end(), nullptr), renderList_.end());
 }
 
+void Game::removeNewTileFlag() {
+    for (auto &tile : renderList_)
+    {
+        tile->isNewTile = false;
+    }
+}
+
 void Game::moveLeft()
 {
     for (int i = 0; i < rows_; i++)
@@ -190,6 +197,7 @@ void Game::moveLeft()
                 tile->moveLeft();
         }
     }
+    removeNewTileFlag();
 }
 
 void Game::moveRight()
@@ -203,6 +211,7 @@ void Game::moveRight()
                 tile->moveRight();
         }
     }
+    removeNewTileFlag();
 }
 
 void Game::moveUp()
@@ -216,6 +225,7 @@ void Game::moveUp()
                 tile->moveUp();
         }
     }
+    removeNewTileFlag();
 }
 
 void Game::moveDown()
@@ -229,6 +239,7 @@ void Game::moveDown()
                 tile->moveDown();
         }
     }
+    removeNewTileFlag();
 }
 
 void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window) {
@@ -307,6 +318,8 @@ void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWin
             }
             break;
     }
+
+    std::cout << numTiles << "\n";
 }
 
 

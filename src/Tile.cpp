@@ -35,6 +35,7 @@ Tile::Tile(Game &game, int i, int j, int val)
       game(game),
       merged(false),
       isPoppingUp(true),
+      isNewTile(true),
       shape(new sf::RectangleShape(sf::Vector2f(
         g_config.getTileSize(), g_config.getTileSize())))
     {   
@@ -93,7 +94,7 @@ void Tile::moveRight() {
     if (nextJ < cols) {
         Tile *tile1 = game.getCell(curI, curJ);
         Tile *tile2 = game.getCell(curI, nextJ);
-        if (tile1->val == tile2->val) {
+        if (!tile2->isNewTile && tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, curI, nextJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
 
@@ -121,7 +122,7 @@ void Tile::moveLeft() {
     if (nextJ >= 0) {
         Tile *tile1 = game.getCell(curI, curJ);
         Tile *tile2 = game.getCell(curI, nextJ);
-        if (tile1->val == tile2->val) {
+        if (!tile2->isNewTile && tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, curI, nextJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
 
@@ -148,7 +149,7 @@ void Tile::moveUp() {
     if (nextI >= 0) {
         Tile *tile1 = game.getCell(curI, curJ);
         Tile *tile2 = game.getCell(nextI, curJ);
-        if (tile1->val == tile2->val) {
+        if (!tile2->isNewTile && tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, nextI, curJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
 
@@ -175,7 +176,7 @@ void Tile::moveDown(){
     if (nextI < rows) {
         Tile *tile1 = game.getCell(curI, curJ);
         Tile *tile2 = game.getCell(nextI, curJ);
-        if (tile1->val == tile2->val) {
+        if (!tile2->isNewTile && tile1->val == tile2->val) {
             Tile* newTile = new Tile(game, nextI, curJ, tile1->val * 2);
             game.resetGridCell(curI, curJ);
 

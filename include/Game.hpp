@@ -40,6 +40,7 @@ class Game
 
         void addTileToRenderList(Tile* tile);
         void removeTileFromRenderList(Tile* tile);
+        void removeNewTileFlag();
         void placeTileOnGrid(Tile* tile, int i, int j);
         void resetGridCell(int i, int j);
         void generateRandomTile();
