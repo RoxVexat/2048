@@ -4,14 +4,14 @@ class Config {
     public:
 
         Config(
-            float windowSize = 800,
+            unsigned int windowSize = 800,
             float gridSize = 640,
             float gapRatio = 0.24f,
             float animTime = 0.1f,
             int gridDimension = 4
         );
 
-        float getWindowSize() const;
+        unsigned int getWindowSize() const;
         float getGridSize() const;
         float getGapRatio() const;
         float getAnimTime() const;
@@ -24,7 +24,7 @@ class Config {
         int getFontSize() const;
     
 
-        void setWindowSize(float windowSize);
+        void setWindowSize(unsigned int windowSize);
         void setGridSize(float gridSize);
         void setGapRatio(float gapRatio);
         void setAnimTime(float animTime);
@@ -34,17 +34,17 @@ class Config {
 
         void calculateDerived();
 
-        float windowSize;
-        float gridSize;
-        float gapRatio;
-        int gridDimension;
+        unsigned int windowSize_;
+        float gridSize_;
+        float gapRatio_;
+        int gridDimension_;
         
-        float gridOffset;
-        float tileSize;
-        float gapSize;
-        float gridLineWidth;
-        float animTime;
-        int fontSize;
+        float gridOffset_;
+        float tileSize_;
+        float gapSize_;
+        float gridLineWidth_;
+        float animTime_;
+        int fontSize_;
 };
 
 extern Config g_config;

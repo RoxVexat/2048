@@ -6,55 +6,53 @@
 
 class Game;
 
-class Tile {
-    
+class Tile
+{
     public:
-    
+
         static std::unordered_map<int, sf::Color> colorMap;
-        bool isPoppingUp;
-        bool isNewTile;
 
         Tile(Game &game, int i, int j, int val);
         ~Tile();
 
+        bool isPoppingUp;
+        bool isNewTile;
+
+        int getVal() const;
+        int getI() const;
+        int getJ() const;
+        int getNewI() const;
+        int getNewJ() const;
         float getX() const;
         float getY() const;
         float getNewX() const;
         float getNewY() const;
 
-        int getI() const;
-        int getJ() const;
-        int getNewI() const;
-        int getNewJ() const;
-
         void setI(int newVal);
         void setJ(int newVal);
 
-        int getVal() const;
-
         bool isMerged() const;
         void markAsMerged();
+        void addToRenderList();
+        void placeOnGrid(int i, int j);
 
         void moveRight();
         void moveLeft();
         void moveUp();
         void moveDown();
 
-        void update(float deltaTime);
-
         void draw(sf::RenderWindow &window);
 
     private:
-        sf::RectangleShape* shape;
-        Game &game;
 
-        int i;
-        int j;
+        Game &game_;
+        sf::RectangleShape* shape_;
 
-        int newI;
-        int newJ;
-        bool merged;
-        int val;
+        int i_;
+        int j_;
 
-    
+        int newI_;
+        int newJ_;
+        bool merged_;
+        int val_;
 };

@@ -15,8 +15,7 @@ Game::Game()
       cols_(g_config.getGridDimension()),
       grid_(rows_ * cols_),
       animTimePassed(g_config.getAnimTime()),
-      areTilesMoving(false),
-      numTiles(0)
+      areTilesMoving(false)
 {
     generateRandomTile();
     generateRandomTile();
@@ -29,6 +28,15 @@ Game::~Game()
 
 int Game::getRows() const { return rows_; }
 int Game::getCols() const { return cols_; }
+int Game::getNumTiles() const
+{
+    int numTiles = 0;
+    for (auto tile : grid_) {
+        if (tile)
+            numTiles++;
+    }
+    return numTiles;
+}
 const std::vector<Tile *> &Game::getGrid() const { return grid_; }
 const std::vector<Tile *> &Game::getRenderList() const { return renderList_; }
 Tile *Game::getCell(int i, int j) const
@@ -59,7 +67,9 @@ bool Game::isMoveLeftAvailable() const
             {
                 auto leftTile = getCell(i, j - 1);
                 if (!leftTile || curTile->getVal() == leftTile->getVal())
+                {
                     return true;
+                }
             }
         }
     }
@@ -77,7 +87,9 @@ bool Game::isMoveRightAvailable() const
             {
                 auto rightTile = getCell(i, j + 1);
                 if (!rightTile || curTile->getVal() == rightTile->getVal())
+                {
                     return true;
+                }
             }
         }
     }
@@ -95,7 +107,9 @@ bool Game::isMoveUpAvailable() const
             {
                 auto topTile = getCell(i - 1, j);
                 if (!topTile || curTile->getVal() == topTile->getVal())
+                {
                     return true;
+                }
             }
         }
     }
@@ -113,26 +127,14 @@ bool Game::isMoveDownAvailable() const
             {
                 auto bottomTile = getCell(i + 1, j);
                 if (!bottomTile || curTile->getVal() == bottomTile->getVal())
+                {
                     return true;
+                }
+                    
             }
         }
     }
     return false;
-}
-
-void Game::addTileToRenderList(Tile *tile)
-{
-    renderList_.push_back(tile);
-}
-
-void Game::removeTileFromRenderList(Tile *tile)
-{
-    renderList_.erase(std::remove(renderList_.begin(), renderList_.end(), tile), renderList_.end());
-}
-
-void Game::placeTileOnGrid(Tile *tile, int i, int j)
-{
-    grid_[i * cols_ + j] = tile;
 }
 
 void Game::resetGridCell(int i, int j)
@@ -143,7 +145,7 @@ void Game::resetGridCell(int i, int j)
 void Game::generateRandomTile()
 {
 
-    if (gameOver() && numTiles > 2)
+    if (gameOver() && getNumTiles() > 2)
         return;
 
     std::random_device rd;
@@ -179,10 +181,13 @@ void Game::cleanMerged()
     renderList_.erase(std::remove(renderList_.begin(), renderList_.end(), nullptr), renderList_.end());
 }
 
-void Game::removeNewTileFlag() {
-    for (auto &tile : renderList_)
-    {
-        tile->isNewTile = false;
+void Game::makeTilesOld() {
+    for (auto &tile : grid_)
+    {   
+        if (tile) 
+        {
+            tile->isNewTile = false;
+        }
     }
 }
 
@@ -194,10 +199,12 @@ void Game::moveLeft()
         {
             auto tile = getCell(i, j);
             if (tile)
+            {
                 tile->moveLeft();
+            }
         }
     }
-    removeNewTileFlag();
+    makeTilesOld();
 }
 
 void Game::moveRight()
@@ -207,11 +214,13 @@ void Game::moveRight()
         for (int j = cols_ - 1; j >= 0; j--)
         {
             auto tile = getCell(i, j);
-            if (tile)
+            if (tile) 
+            {
                 tile->moveRight();
+            }
         }
     }
-    removeNewTileFlag();
+    makeTilesOld();
 }
 
 void Game::moveUp()
@@ -222,10 +231,12 @@ void Game::moveUp()
         {
             auto tile = getCell(i, j);
             if (tile)
+            {
                 tile->moveUp();
+            }
         }
     }
-    removeNewTileFlag();
+    makeTilesOld();
 }
 
 void Game::moveDown()
@@ -236,10 +247,13 @@ void Game::moveDown()
         {
             auto tile = getCell(i, j);
             if (tile)
+            {
                 tile->moveDown();
+            }
+                
         }
     }
-    removeNewTileFlag();
+    makeTilesOld();
 }
 
 void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window) {
@@ -318,16 +332,16 @@ void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWin
             }
             break;
     }
-
-    std::cout << numTiles << "\n";
 }
 
 
 void Game::cleanUp()
 {
     for (auto tile : renderList_)
+    {
         delete tile;
-
+    }
+        
     renderList_.clear();
 
     for (auto &ptr : grid_)
@@ -338,9 +352,7 @@ void Game::cleanUp()
 
 void Game::reset()
 {
-
     cleanUp();
-    numTiles = 0;   
 
     rows_ = g_config.getGridDimension();
     cols_ = g_config.getGridDimension();

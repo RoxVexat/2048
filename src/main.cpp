@@ -10,7 +10,9 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({800, 800}), "2048");
+    sf::RenderWindow window(sf::VideoMode(
+        {g_config.getWindowSize(), g_config.getWindowSize()}
+    ), "2048");
     
     Game game;
     sf::Clock clock;

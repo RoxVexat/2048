@@ -11,19 +11,19 @@ class Tile;
 class Game
 {
     public:
+    
         static sf::Font font;
         
         bool areTilesMoving;
         float animTimePassed;
         
-        int numTiles;
         Game();
         ~Game();
-        
         void reset();
 
         int getCols() const;
         int getRows() const;
+        int getNumTiles() const;
         Tile* getCell(int i, int j) const;
         const std::vector<Tile*>& getGrid() const;
         const std::vector<Tile*>& getRenderList() const;
@@ -37,33 +37,29 @@ class Game
         bool isMoveUpAvailable() const;
         bool isMoveDownAvailable() const;
         
-
-        void addTileToRenderList(Tile* tile);
-        void removeTileFromRenderList(Tile* tile);
-        void removeNewTileFlag();
-        void placeTileOnGrid(Tile* tile, int i, int j);
+        void makeTilesOld();
         void resetGridCell(int i, int j);
         void generateRandomTile();
-        
         
         void moveLeft();
         void moveRight();
         void moveUp();
         void moveDown();
-        
-        void handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window);
-
+            
         void startMoveAnim();
         void endMoveAnim();
         void update(float deltaTime);
         void cleanMerged();
-        
+    
         void draw(sf::RenderWindow& window);
         void drawGridBackground(sf::RenderWindow& window);
+        
+        void handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window);
 
     private:
+
         void cleanUp();
-        int cols_;
+        int cols_; 
         int rows_;
         std::vector<Tile*> grid_;
         std::vector<Tile*> renderList_;
