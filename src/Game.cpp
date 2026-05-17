@@ -1,7 +1,7 @@
-#include "Game.hpp"
+#include "Game.h"
 
-#include "Tile.hpp"
-#include "Config.hpp"
+#include "Tile.h"
+#include "Config.h"
 
 #include <algorithm>
 #include <iostream>

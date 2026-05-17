@@ -1,16 +1,15 @@
-#include "Config.hpp"
+#include "Config.h"
 
 Config g_config;
 
 Config::Config
 (
     unsigned int windowSize,
-    float gridSize,
+    int gridDimension,
     float gapRatio,
-    float animTime,
-    int gridDimension
+    float animTime
 ) : windowSize_(windowSize),
-    gridSize_(gridSize),
+    gridSize_(static_cast<int>(windowSize * 0.8)),
     gapRatio_(gapRatio),
     animTime_(animTime),
     gridDimension_(gridDimension)
@@ -20,7 +19,7 @@ Config::Config
 
 void Config::calculateDerived()
 {
-    gridOffset_ = (windowSize_ - gridSize_) / 2;
+    gridOffset_ = (static_cast<int>(windowSize_) - gridSize_) / 2;
     tileSize_ = gridSize_ * (1 - gapRatio_) / gridDimension_;
     gapSize_ = gridSize_ * gapRatio_ / (gridDimension_ + 1);
     gridLineWidth_ = gapSize_ / 4;
@@ -29,7 +28,7 @@ void Config::calculateDerived()
 
 
 unsigned int Config::getWindowSize() const { return windowSize_; }
-float Config::getGridSize() const { return gridSize_; }
+int Config::getGridSize() const { return gridSize_; }
 float Config::getGapRatio() const { return gapRatio_; }
 float Config::getAnimTime() const { return animTime_; }
 int Config::getGridDimension() const { return gridDimension_; }
@@ -46,7 +45,7 @@ void Config::setWindowSize(unsigned int newWindowSize) {
     calculateDerived();
 }
 
-void Config::setGridSize(float newGridSize) {
+void Config::setGridSize(int newGridSize) {
     gridSize_ = newGridSize;
     calculateDerived();
 }

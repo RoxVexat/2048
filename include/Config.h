@@ -5,14 +5,13 @@ class Config {
 
         Config(
             unsigned int windowSize = 800,
-            float gridSize = 640,
+            int gridDimension = 4,
             float gapRatio = 0.24f,
-            float animTime = 0.1f,
-            int gridDimension = 4
+            float animTime = 0.1f
         );
 
         unsigned int getWindowSize() const;
-        float getGridSize() const;
+        int getGridSize() const;
         float getGapRatio() const;
         float getAnimTime() const;
         int getGridDimension() const;
@@ -25,7 +24,7 @@ class Config {
     
 
         void setWindowSize(unsigned int windowSize);
-        void setGridSize(float gridSize);
+        void setGridSize(int gridSize);
         void setGapRatio(float gapRatio);
         void setAnimTime(float animTime);
         void setGridDimension(int gridDimension);
@@ -35,15 +34,15 @@ class Config {
         void calculateDerived();
 
         unsigned int windowSize_;
-        float gridSize_;
         float gapRatio_;
         int gridDimension_;
+        float animTime_;
         
+        int gridSize_;
+        float gapSize_;
         float gridOffset_;
         float tileSize_;
-        float gapSize_;
         float gridLineWidth_;
-        float animTime_;
         int fontSize_;
 };
 

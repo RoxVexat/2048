@@ -1,6 +1,5 @@
-#include "Tile.hpp"
-#include "Game.hpp"
-#include "Config.hpp"
+#include "Game.h"
+#include "Config.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
