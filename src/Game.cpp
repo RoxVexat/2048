@@ -2,6 +2,7 @@
 
 #include "Tile.h"
 #include "Config.h"
+#include "Data.h"
 
 #include <algorithm>
 #include <iostream>
@@ -15,7 +16,8 @@ Game::Game()
       cols_(g_config.getGridDimension()),
       grid_(rows_ * cols_),
       animTimePassed(g_config.getAnimTime()),
-      areTilesMoving(false)
+      areTilesMoving(false),
+      score(0)
 {
     generateRandomTile();
     generateRandomTile();
@@ -205,6 +207,8 @@ void Game::moveLeft()
         }
     }
     makeTilesOld();
+    Data::updateHighScore(score);
+    Data::saveHighScores();
 }
 
 void Game::moveRight()
@@ -221,6 +225,8 @@ void Game::moveRight()
         }
     }
     makeTilesOld();
+    Data::updateHighScore(score);
+    Data::saveHighScores();
 }
 
 void Game::moveUp()
@@ -237,6 +243,8 @@ void Game::moveUp()
         }
     }
     makeTilesOld();
+    Data::updateHighScore(score);
+    Data::saveHighScores();
 }
 
 void Game::moveDown()
@@ -254,6 +262,8 @@ void Game::moveDown()
         }
     }
     makeTilesOld();
+    Data::updateHighScore(score);
+    Data::saveHighScores();
 }
 
 void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window) {
@@ -334,7 +344,6 @@ void Game::handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWin
     }
 }
 
-
 void Game::cleanUp()
 {
     for (auto tile : renderList_)
@@ -353,6 +362,8 @@ void Game::cleanUp()
 void Game::reset()
 {
     cleanUp();
+
+    score = 0;
 
     rows_ = g_config.getGridDimension();
     cols_ = g_config.getGridDimension();
@@ -396,10 +407,13 @@ void Game::endMoveAnim()
 void Game::draw(sf::RenderWindow &window)
 {
     drawGridBackground(window);
+    
     for (auto tile : renderList_)
     {
         tile->draw(window);
     }
+
+    drawGameInfo(window);
 }
 
 void Game::drawGridBackground(sf::RenderWindow &window)
@@ -437,4 +451,25 @@ void Game::drawGridBackground(sf::RenderWindow &window)
         window.draw(vLine);
         window.draw(hLine);
     }
+}
+
+void Game::drawGameInfo(sf::RenderWindow &window) {
+    const int dim = g_config.getGridDimension();
+    const int best = Data::highScores[dim];
+
+    sf::Text text(font);
+
+    std::ostringstream info;
+    info << dim << "x" << dim
+         << " | " << "Score: " << score
+         << "  Best: " << best;
+
+    if (gameOver()) info << " | Game Over (R)";
+
+    text.setString(info.str());
+    text.setCharacterSize(30 * g_config.getWindowSize() / 800);
+    text.setFillColor(sf::Color::White);
+    text.setPosition({4, 0});
+
+    window.draw(text);
 }

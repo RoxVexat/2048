@@ -16,6 +16,7 @@ class Game
         
         bool areTilesMoving;
         float animTimePassed;
+        unsigned int score;
         
         Game();
         ~Game();
@@ -46,6 +47,8 @@ class Game
         void moveUp();
         void moveDown();
             
+        void handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window);
+        
         void startMoveAnim();
         void endMoveAnim();
         void update(float deltaTime);
@@ -53,8 +56,8 @@ class Game
     
         void draw(sf::RenderWindow& window);
         void drawGridBackground(sf::RenderWindow& window);
+        void drawGameInfo(sf::RenderWindow& window);
         
-        void handleKeyPress(const sf::Event::KeyPressed& keyPressed, sf::RenderWindow& window);
 
     private:
 

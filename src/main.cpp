@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Config.h"
+#include "Data.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -15,7 +16,8 @@ int main()
     
     Game game;
     sf::Clock clock;
-
+    Data::loadHighScores();
+    
     while (window.isOpen())
     {   
         sf::Time deltaTime = clock.restart();

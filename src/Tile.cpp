@@ -27,6 +27,7 @@ std::unordered_map<int, sf::Color> Tile::colorMap = {
     {65536, sf::Color(0x00, 0xe5, 0xff)}
 };
 
+
 Tile::Tile(Game &game, int i, int j, int val)
     : i_(i),
       j_(j),
@@ -49,11 +50,13 @@ Tile::~Tile()
     delete shape_;
 }
 
+Game& Tile::getGame() const {return game_;}
+int Tile::getVal() const { return val_; }
 int Tile::getI() const{ return i_; }
 int Tile::getJ() const { return j_; }
 int Tile::getNewI() const { return newI_; }
 int Tile::getNewJ() const { return newJ_; }
-int Tile::getVal() const { return val_; }
+
 
 float Tile::getX() const
 {
@@ -109,6 +112,7 @@ void Tile::moveRight()
             game_.resetGridCell(curI, curJ);
 
             newJ_++;
+            game_.score += tile1->getVal() * 2;
             tile1->markAsMerged();
             tile2->markAsMerged();
         }
@@ -138,6 +142,7 @@ void Tile::moveLeft()
             game_.resetGridCell(curI, curJ);
 
             newJ_--;
+            game_.score += tile1->getVal() * 2;
             tile1->markAsMerged();
             tile2->markAsMerged();
         }
@@ -167,6 +172,7 @@ void Tile::moveUp()
             game_.resetGridCell(curI, curJ);
 
             newI_--;
+            game_.score += tile1->getVal() * 2;
             tile1->markAsMerged();
             tile2->markAsMerged();
         }
@@ -196,6 +202,7 @@ void Tile::moveDown()
             game_.resetGridCell(curI, curJ);
 
             newI_++;
+            game_.score += tile1->getVal() * 2;
             tile1->markAsMerged();
             tile2->markAsMerged();
         }

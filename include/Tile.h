@@ -18,6 +18,7 @@ class Tile
         bool isPoppingUp;
         bool isNewTile;
 
+        Game& getGame() const;
         int getVal() const;
         int getI() const;
         int getJ() const;
