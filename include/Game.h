@@ -28,6 +28,7 @@ class Game
         Tile* getCell(int i, int j) const;
         const std::vector<Tile*>& getGrid() const;
         const std::vector<Tile*>& getRenderList() const;
+        sf::RenderTexture& getSceneBuffer();
 
         std::vector<Tile*>& getGrid();
         std::vector<Tile*>& getRenderList();
@@ -55,15 +56,20 @@ class Game
         void cleanMerged();
     
         void draw(sf::RenderWindow& window);
-        void drawGridBackground(sf::RenderWindow& window);
         void drawGameInfo(sf::RenderWindow& window);
+        void drawGameOver(sf::RenderWindow& window);
+        void renderGridBackground();
         
 
     private:
 
         void cleanUp();
+        bool shouldDrawGameOver_;
+        float timePassedSinceGameOver_;
         int cols_; 
         int rows_;
         std::vector<Tile*> grid_;
         std::vector<Tile*> renderList_;
+        sf::RenderTexture sceneBuffer_;
+        sf::Shader blur_;
 };

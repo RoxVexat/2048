@@ -7,12 +7,15 @@ Config::Config
     unsigned int windowSize,
     int gridDimension,
     float gapRatio,
-    float animTime
+    float animTime,
+    float timeBeforeGameOver
+
 ) : windowSize_(windowSize),
     gridSize_(static_cast<int>(windowSize * 0.8)),
     gapRatio_(gapRatio),
     animTime_(animTime),
-    gridDimension_(gridDimension)
+    gridDimension_(gridDimension),
+    timeBeforeGameOver_(timeBeforeGameOver)
 {
     calculateDerived();
 };
@@ -28,11 +31,12 @@ void Config::calculateDerived()
 
 
 unsigned int Config::getWindowSize() const { return windowSize_; }
-int Config::getGridSize() const { return gridSize_; }
+int Config::getGridDimension() const { return gridDimension_; }
 float Config::getGapRatio() const { return gapRatio_; }
 float Config::getAnimTime() const { return animTime_; }
-int Config::getGridDimension() const { return gridDimension_; }
+float Config::getTimeBeforeGameOver() const {return timeBeforeGameOver_; }
 
+int Config::getGridSize() const { return gridSize_; }
 float Config::getGridOffset() const { return gridOffset_; }
 float Config::getTileSize() const { return tileSize_; }
 float Config::getGapSize() const { return gapSize_; }

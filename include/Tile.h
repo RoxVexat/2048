@@ -42,7 +42,7 @@ class Tile
         void moveUp();
         void moveDown();
 
-        void draw(sf::RenderWindow &window);
+        void render();
 
     private:
 

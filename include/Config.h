@@ -7,15 +7,17 @@ class Config {
             unsigned int windowSize = 800,
             int gridDimension = 4,
             float gapRatio = 0.24f,
-            float animTime = 0.1f
+            float animTime = 0.1f,
+            float timeBeforeGameOver = 1
         );
 
         unsigned int getWindowSize() const;
-        int getGridSize() const;
+        int getGridDimension() const;
         float getGapRatio() const;
         float getAnimTime() const;
-        int getGridDimension() const;
-    
+        float getTimeBeforeGameOver() const;
+        
+        int getGridSize() const;
         float getGridOffset() const;
         float getTileSize() const;
         float getGapSize() const;
@@ -37,6 +39,7 @@ class Config {
         float gapRatio_;
         int gridDimension_;
         float animTime_;
+        float timeBeforeGameOver_;
         
         int gridSize_;
         float gapSize_;

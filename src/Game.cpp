@@ -16,9 +16,17 @@ Game::Game()
       cols_(g_config.getGridDimension()),
       grid_(rows_ * cols_),
       animTimePassed(g_config.getAnimTime()),
+      shouldDrawGameOver_(false),
+      timePassedSinceGameOver_(0.0f),
       areTilesMoving(false),
-      score(0)
-{
+      score(0),
+      sceneBuffer_({g_config.getWindowSize(), g_config.getWindowSize()})
+
+{   
+    static_cast<void>(blur_.loadFromFile("blur.frag", sf::Shader::Type::Fragment));
+    blur_.setUniform("blur_radius", 15.0f);
+    blur_.setUniform("texture", sf::Shader::CurrentTexture);
+
     generateRandomTile();
     generateRandomTile();
 }
@@ -48,6 +56,7 @@ Tile *Game::getCell(int i, int j) const
 
 std::vector<Tile *>& Game::getGrid() { return grid_; }
 std::vector<Tile *>& Game::getRenderList() { return renderList_; }
+sf::RenderTexture& Game::getSceneBuffer() { return sceneBuffer_; }
 
 bool Game::gameOver() const
 {
@@ -364,6 +373,8 @@ void Game::reset()
     cleanUp();
 
     score = 0;
+    shouldDrawGameOver_ = false;
+    timePassedSinceGameOver_ = 0;
 
     rows_ = g_config.getGridDimension();
     cols_ = g_config.getGridDimension();
@@ -383,6 +394,12 @@ void Game::update(float deltaTime)
         {
             areTilesMoving = false;
         }
+    }
+
+    if (!shouldDrawGameOver_ && gameOver()) {
+        timePassedSinceGameOver_ += deltaTime;
+        if (timePassedSinceGameOver_ >= g_config.getTimeBeforeGameOver())
+            shouldDrawGameOver_ = true;
     }
 }
 void Game::startMoveAnim()
@@ -405,18 +422,29 @@ void Game::endMoveAnim()
 }
 
 void Game::draw(sf::RenderWindow &window)
-{
-    drawGridBackground(window);
+{   
+    sceneBuffer_.clear(sf::Color::Black);
     
+    renderGridBackground();    
     for (auto tile : renderList_)
     {
-        tile->draw(window);
+        tile->render();
+    }
+
+    sceneBuffer_.display();
+    sf::Sprite sceneSprite(sceneBuffer_.getTexture()); 
+    
+    if (shouldDrawGameOver_) {
+        window.draw(sceneSprite, &blur_);
+        drawGameOver(window);
+    } else {
+        window.draw(sceneSprite);
     }
 
     drawGameInfo(window);
 }
 
-void Game::drawGridBackground(sf::RenderWindow &window)
+void Game::renderGridBackground()
 {   
     const float tileSize = g_config.getTileSize();
     const float gridSize = g_config.getGridSize();
@@ -431,7 +459,7 @@ void Game::drawGridBackground(sf::RenderWindow &window)
     bg.setPosition({gridOffset+lineOffset, gridOffset+lineOffset});
 
     bg.setFillColor(sf::Color(42, 42, 42)); 
-    window.draw(bg);
+    sceneBuffer_.draw(bg);
 
     for (int i = 0; i <= rows_; i++)
     {   
@@ -448,12 +476,13 @@ void Game::drawGridBackground(sf::RenderWindow &window)
         vLine.setFillColor(lineColor);
         hLine.setFillColor(lineColor);
 
-        window.draw(vLine);
-        window.draw(hLine);
+        sceneBuffer_.draw(vLine);
+        sceneBuffer_.draw(hLine);
     }
 }
 
-void Game::drawGameInfo(sf::RenderWindow &window) {
+void Game::drawGameInfo(sf::RenderWindow& window)
+{
     const int dim = g_config.getGridDimension();
     const int best = Data::highScores[dim];
 
@@ -464,12 +493,59 @@ void Game::drawGameInfo(sf::RenderWindow &window) {
          << " | " << "Score: " << score
          << "  Best: " << best;
 
-    if (gameOver()) info << " | Game Over (R)";
-
     text.setString(info.str());
     text.setCharacterSize(30 * g_config.getWindowSize() / 800);
     text.setFillColor(sf::Color::White);
     text.setPosition({4, 0});
 
     window.draw(text);
+}
+
+void Game::drawGameOver(sf::RenderWindow& window)
+{
+    const int windowSize = g_config.getWindowSize();
+    const float rectWidth = static_cast<int>(windowSize / 800 * 360);
+    const float rectHeight = static_cast<int>(windowSize / 800 * 210);
+    const float rectX = windowSize/2 - rectWidth/2;
+    const float rectY = windowSize/2 - rectHeight/2;
+    const int textSize = windowSize / 800 * 62;
+
+    sf::RectangleShape rect({rectWidth, rectHeight});
+
+    rect.setFillColor(sf::Color::Black);
+    rect.setPosition({rectX, rectY});
+
+    sf::Text text1(font);
+    sf::Text text2(font);
+
+    text1.setString("Game Over");
+    text1.setFillColor(sf::Color::White);
+    text1.setCharacterSize(textSize);
+    text2.setString("Restart? (R)");
+    text2.setFillColor(sf::Color::White);
+    text2.setCharacterSize(textSize);
+
+    sf::FloatRect textRect1 = text1.getLocalBounds();
+    text1.setOrigin({
+        textRect1.size.x / 2.0f,
+        textRect1.size.y / 2.0f
+    });
+    text1.setPosition({
+        rectX + rectWidth / 2.0f,
+        rectY + textSize / 2.0f
+    });
+
+    sf::FloatRect textRect2 = text2.getLocalBounds();
+    text2.setOrigin({
+        textRect2.size.x / 2.0f,
+        textRect2.size.y / 2.0f
+    });
+    text2.setPosition({
+        rectX + rectWidth / 2.0f,
+        rectY + rectHeight - 6.0f / 5 * textSize
+    });
+
+    window.draw(rect);
+    window.draw(text1);
+    window.draw(text2);
 }

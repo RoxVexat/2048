@@ -4,7 +4,7 @@ project(2048)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SFML_DIR "C:/libs/SFML")
+set(SFML_DIR "SFML")
 set(SFML_INCLUDE_DIR "${SFML_DIR}/include")
 set(SFML_LIB_DIR "${SFML_DIR}/lib")
 

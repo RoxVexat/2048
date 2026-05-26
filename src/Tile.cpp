@@ -210,7 +210,7 @@ void Tile::moveDown()
 }
 
 
-void Tile::draw(sf::RenderWindow& window)
+void Tile::render()
 {   
 
     const float tileSize = g_config.getTileSize();
@@ -261,7 +261,7 @@ void Tile::draw(sf::RenderWindow& window)
         y + tileSize / 2
     });
 
-    window.draw(*shape_);
-    window.draw(text);
+    game_.getSceneBuffer().draw(*shape_);
+    game_.getSceneBuffer().draw(text);
 }
 
